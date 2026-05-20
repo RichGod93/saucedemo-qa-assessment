@@ -126,33 +126,33 @@ class LoginPage {
         cy.visit('/');
     }
 
-    enterUsername(username){
+    enterUsername(username) {
         cy.get(this.usernameInput).clear().type(username);
     }
 
-    enterPassword(password){
+    enterPassword(password) {
         cy.get(this.passwordInput).clear().type(password);
     }
 
-    clickLogin(){
+    clickLogin() {
         cy.get(this.loginBtn).click();
     }
 
-    login(username, password){
+    login(username, password) {
         this.enterUsername(username);
         this.enterPassword(password);
         this.clickLogin();
     }
 
-    verifyLoginSuccess(){
-        cy.url().should('include','inventory');
+    verifyLoginSuccess() {
+        cy.url().should('include', 'inventory');
     }
 
-    verifyError(){
+    verifyError() {
         cy.get(this.errorMessage).should('be.visible');
     }
 
-    logout(){
+    logout() {
         cy.get(this.menuButton).click();
         cy.get(this.logoutButton).click();
     }
@@ -189,15 +189,16 @@ class InventoryPage {
     addBackpack = '[data-test="add-to-cart-sauce-labs-backpack"]';
     cartIcon = '.shopping_cart_link';
 
-    addItemToCart(){
+    addItemToCart() {
         cy.get(this.addBackpack).click();
     }
 
-    verifyCartCount(count){
-        cy.get(this.cartBadge).should('have.text', count);
+    verifyCartCount(count) {
+        cy.get(this.cartBadge)
+            .should('have.text', count);
     }
 
-    goToCart(){
+    goToCart() {
         cy.get(this.cartIcon).click();
     }
 
@@ -217,12 +218,14 @@ class CartPage {
 
     checkoutButton = '[data-test="checkout"]';
 
-    verifyItemExists(itemName){
-        cy.contains(itemName).should('exist');
+    verifyItemExists(itemName) {
+        cy.contains(itemName)
+            .should('exist');
     }
 
-    proceedCheckout(){
-        cy.get(this.checkoutButton).click();
+    proceedCheckout() {
+        cy.get(this.checkoutButton)
+            .click();
     }
 
 }
@@ -245,22 +248,38 @@ class CheckoutPage {
     continueBtn = '[data-test="continue"]';
     finishBtn = '[data-test="finish"]';
 
-    fillCheckoutInfo(first, last, postal){
-        cy.get(this.firstName).type(first);
-        cy.get(this.lastName).type(last);
-        cy.get(this.postalCode).type(postal);
+    fillCheckoutInfo(first, last, postal) {
+
+        cy.get(this.firstName)
+            .type(first);
+
+        cy.get(this.lastName)
+            .type(last);
+
+        cy.get(this.postalCode)
+            .type(postal);
+
     }
 
-    continue(){
-        cy.get(this.continueBtn).click();
+    continue() {
+
+        cy.get(this.continueBtn)
+            .click();
+
     }
 
-    finish(){
-        cy.get(this.finishBtn).click();
+    finish() {
+
+        cy.get(this.finishBtn)
+            .click();
+
     }
 
-    verifyOrderSuccess(){
-        cy.contains('Thank you for your order!').should('be.visible');
+    verifyOrderSuccess() {
+
+        cy.contains('Thank you for your order!')
+            .should('be.visible');
+
     }
 
 }
@@ -275,6 +294,10 @@ export default CheckoutPage;
 ### cypress/support/commands.js
 
 ```javascript
+// ***********************************************
+// Custom Cypress Commands
+// ***********************************************
+
 Cypress.Commands.add('loginStandardUser', () => {
 
     cy.visit('/');
@@ -336,41 +359,70 @@ describe('SauceDemo Test Suite', () => {
     });
 
     it('Successful Login', () => {
+
         cy.task('getEnv', 'STANDARD_USER').then((username) => {
             cy.task('getEnv', 'PASSWORD').then((password) => {
                 loginPage.login(username, password);
             });
         });
+
         loginPage.verifyLoginSuccess();
+
     });
 
     it('Failed Login', () => {
+
         loginPage.login('wrong_user', 'wrong_password');
+
         loginPage.verifyError();
+
     });
 
     it('Add item and verify cart count', () => {
+
         cy.loginStandardUser();
+
         inventoryPage.addItemToCart();
+
         inventoryPage.verifyCartCount('1');
+
     });
 
     it('Complete Checkout Flow', () => {
+
         cy.loginStandardUser();
+
         inventoryPage.addItemToCart();
+
         inventoryPage.goToCart();
+
         cartPage.verifyItemExists('Sauce Labs Backpack');
+
         cartPage.proceedCheckout();
-        checkoutPage.fillCheckoutInfo('RichGod', 'Usen', '12345');
+
+        checkoutPage.fillCheckoutInfo(
+            'RichGod',
+            'Usen',
+            '12345'
+        );
+
         checkoutPage.continue();
+
         checkoutPage.finish();
+
         checkoutPage.verifyOrderSuccess();
+
     });
 
     it('Logout', () => {
+
         cy.loginStandardUser();
+
         loginPage.logout();
-        cy.url().should('eq', 'https://www.saucedemo.com/');
+
+        cy.url()
+            .should('eq', 'https://www.saucedemo.com/');
+
     });
 
 });
