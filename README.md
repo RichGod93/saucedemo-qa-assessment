@@ -1,99 +1,79 @@
-# SauceDemo QA Technical Assessment
+# SauceDemo QA Assessment
 
-## Project Overview
+## Overview
 
-This repository contains the QA assessment deliverables for testing the SauceDemo application:
+This repo contains my QA assessment deliverables for testing the SauceDemo application — https://www.saucedemo.com.
 
-**Application under test:** https://www.saucedemo.com/
+What's in here:
 
-The assessment includes:
+- Manual test cases with actual execution results
+- Exploratory testing notes with real observations
+- Bug reports backed by evidence
+- Cypress E2E automation built with the Page Object Model
+- Postman API test scripts with assertions
+- Supporting docs
 
-- ✅ **Manual test cases** with actual execution results
-- ✅ **Exploratory testing findings** with real observations
-- ✅ **Bug reports** with evidence-based documentation
-- ✅ **Cypress E2E automation** using Page Object Model (POM)
-- ✅ **Postman API test scripts** with comprehensive assertions
-- ✅ **Supporting documentation** and test evidence
-
-The automation framework focuses on validating critical user workflows while maintaining readability, scalability, and maintainability.
+The automation side focuses on the critical user flows and is set up to be readable and easy to extend.
 
 ---
 
-## 🎯 Key Findings
+## What I Found
 
-**Test Execution Summary:**
-- **Automated Tests:** 24 test cases (22 passed, 1 failed, 3 not executed)
-- **Manual UI Tests:** 3 test cases (3 failed - all revealed critical/high severity defects)
-- **Combined Total:** 27 tests executed (22 passed, 4 failed)
-- **Overall Pass Rate:** 81.48%
+**Test run summary:**
+- Automated: 24 test cases — 22 passed, 1 failed, 1 skipped
+- Manual UI: 3 test cases — all 3 failed and revealed real defects
+- Combined: 27 tests, 22 passed — 81.48% pass rate
 
-**Critical Discoveries:**
+**The big ones:**
 
-🚨 **TWO BLOCKER BUGS FOUND:**
-1. **BUG-006:** Checkout last name field malfunction - affects **ALL USERS**
-   - Characters typed in Last Name field appear in First Name field
-   - **Complete checkout blocker** - no user can fill out form correctly
-   - **Manual testing discovery**
+**BUG-006 — Checkout last name field is broken (affects every user)**
+Characters typed into the Last Name field show up in the First Name field instead. Nobody can complete checkout. This was caught during manual testing.
 
-2. **BUG-005:** `problem_user` cannot complete checkout - finish button not found
-   - Affects problem_user account specifically
-   - **Automated testing discovery**
+**BUG-005 — problem_user can't finish checkout**
+The finish button simply doesn't exist on the final checkout step for this account. Caught by automation.
 
-⚠️ **HIGH SEVERITY BUGS CONFIRMED:**
-3. **BUG-001:** Product images incorrect - all show dog pictures (manually verified)
-4. **BUG-007:** Remove button non-functional on inventory page (manually verified)
+**Other confirmed issues:**
+- BUG-001: All product images show a dog picture — manually verified
+- BUG-007: The remove button on the inventory page doesn't work — manually verified
 
-**Status Updates:**
-- ❌ `standard_user` account **NOT fully functional** - checkout form broken (BUG-006)
-- ❌ `problem_user` has multiple critical and high severity issues
-- ✅ Original bug reports about cart/sorting issues **NOT CONFIRMED** in testing
+**A few corrections from earlier assumptions:**
+- standard_user is NOT fully functional — the checkout form is broken
+- Cart functionality and sorting both work fine — previous reports of issues weren't reproducible
 
 ---
 
-## Features Tested
+## What's Tested
 
-The following application areas were covered:
+1. Login — valid credentials, invalid credentials, error messages
+2. Cart — adding items, badge count, multi-item handling
+3. Product filtering — A-Z, Z-A, price low-high, price high-low
+4. Cart page — item display, empty state
+5. Checkout — full end-to-end flow, field validation, order confirmation
 
-1. **Login** - Valid/invalid credentials, error handling
-2. **Add/Remove Cart Items** - Cart badge updates, multi-item handling
-3. **Product Filtering** - A-Z, Z-A, Price sorting (low-high, high-low)
-4. **View Cart** - Cart page display, empty cart handling
-5. **Checkout Process** - Full E2E flow, field validation, order completion
-
-**Test Accounts:**
-- ✅ `standard_user` / `secret_sauce` - Fully functional
-- ⚠️ `problem_user` / `secret_sauce` - Checkout blocker (BUG-005)
+**Accounts used:**
+- `standard_user` / `secret_sauce` — mostly functional, checkout form is broken (BUG-006)
+- `problem_user` / `secret_sauce` — multiple issues, checkout is completely blocked
 
 ---
 
 ## Tech Stack
 
-### Automation
-- **Cypress** 15.15.0 - E2E test automation
-- **JavaScript** ES6+ - Test scripting
-- **Page Object Model (POM)** - Maintainable test architecture
-- **Cypress Env** - Secure credential management
-
-### API Testing
-- **Postman** - API test script development
-- **Newman** (optional) - CLI execution for CI/CD
-
-### Version Control
-- **Git** - Version control
-- **GitHub** - Repository hosting
+- **Cypress 15.15.0** — E2E automation
+- **JavaScript (ES6+)** — test scripting
+- **Page Object Model** — keeps the test code clean and maintainable
+- **Postman** — API test scripts
+- **Git / GitHub** — version control
 
 ---
 
 ## Prerequisites
 
-Before running the project, ensure the following are installed:
+- Node.js v18+
+- npm v9+
+- Git
+- Postman (for the API tests)
 
-- **Node.js** v18+ (recommended)
-- **npm** v9+
-- **Git**
-- **Postman Desktop Application** (for API tests)
-
-**Verify installation:**
+Check your versions:
 
 ```bash
 node -v
@@ -111,61 +91,48 @@ saucedemo-qa-assessment/
 ├── cypress/
 │   ├── e2e/
 │   │   ├── saucedemo.cy.js          # Main test suite (standard_user)
-│   │   └── problem-user.cy.js       # Problem user bug documentation
+│   │   └── problem-user.cy.js       # problem_user bug documentation
 │   │
 │   ├── pages/
-│   │   ├── LoginPage.js             # Login page object
-│   │   ├── InventoryPage.js         # Product inventory page object
-│   │   ├── CartPage.js              # Shopping cart page object
-│   │   └── CheckoutPage.js          # Checkout flow page object
+│   │   ├── LoginPage.js
+│   │   ├── InventoryPage.js
+│   │   ├── CartPage.js
+│   │   └── CheckoutPage.js
 │   │
-│   ├── screenshots/                  # Auto-captured on failures
+│   ├── screenshots/                  # Auto-captured on test failure
 │   │
 │   └── support/
-│       ├── commands.js               # Custom commands (e.g., loginStandardUser)
-│       └── e2e.js                    # Cypress configuration
+│       ├── commands.js               # Custom commands
+│       └── e2e.js
 │
 ├── postman/
-│   └── users-api-collection.json    # Postman collection (to be exported)
+│   └── users-api-collection.json
 │
-├── cypress.env.json                  # Environment variables (credentials)
-├── cypress.config.js                 # Cypress configuration
-├── package.json                      # Node dependencies
+├── cypress.env.json                  # Test credentials (gitignored)
+├── cypress.config.js
+├── package.json
 │
-├── SECTION-1-TEST-CASES.md          # Detailed test cases with results
-├── SECTION-2-CYPRESS.md             # Cypress implementation guide
-├── SECTION-3-POSTMAN.md             # Postman test scripts
-└── README.md                         # This file
+├── SECTION-1-TEST-CASES.md
+├── SECTION-2-CYPRESS.md
+├── SECTION-3-POSTMAN.md
+└── README.md
 ```
 
 ---
 
-## Setup Instructions
+## Setup
 
-### 1. Clone Repository
+### Clone and install
 
 ```bash
 git clone <repository-url>
 cd saucedemo-qa-assessment
-```
-
-### 2. Install Dependencies
-
-```bash
 npm install
 ```
 
-This will install Cypress and all required packages.
+### Environment config
 
-### 3. Verify Cypress Installation
-
-```bash
-npx cypress verify
-```
-
-### 4. Environment Configuration
-
-The `cypress.env.json` file contains test credentials:
+Create a `cypress.env.json` file in the project root — this file is gitignored and needs to be created manually:
 
 ```json
 {
@@ -175,398 +142,229 @@ The `cypress.env.json` file contains test credentials:
 }
 ```
 
-⚠️ **Note:** This file is already configured. Do not commit real credentials to version control.
+Verify Cypress is installed correctly:
+
+```bash
+npx cypress verify
+```
 
 ---
 
-## Running Cypress Tests
+## Running the Tests
 
-### Option 1: Run with Cypress UI (Interactive Mode)
+### Interactive mode (UI)
 
 ```bash
 npx cypress open
 ```
 
-**Steps:**
-1. Select **E2E Testing**
-2. Choose a browser (Chrome/Electron/Firefox)
-3. Click on test file:
-   - `saucedemo.cy.js` - Main test suite (standard_user)
-   - `problem-user.cy.js` - Problem user bug documentation
+Select E2E Testing, pick a browser, then click a spec file:
+- `saucedemo.cy.js` — standard_user suite
+- `problem-user.cy.js` — problem_user bug documentation
 
-**Use Case:** Great for test development, debugging, and visual inspection.
+This is the best mode for debugging or watching tests run step by step.
 
----
-
-### Option 2: Run Headless (CLI Mode)
+### Headless mode
 
 ```bash
 npx cypress run
 ```
 
-**This will:**
-- Run all specs in headless mode
-- Generate screenshots on failures
-- Display results in terminal
-- Execution time: ~2 minutes
+Runs everything, captures screenshots on failures, prints results to terminal. Takes about 2 minutes.
 
----
-
-### Option 3: Run Specific Test File
+### Run a specific file
 
 ```bash
-# Run standard_user tests
 npx cypress run --spec "cypress/e2e/saucedemo.cy.js"
-
-# Run problem_user bug documentation
 npx cypress run --spec "cypress/e2e/problem-user.cy.js"
 ```
 
----
-
-### Option 4: Run in Specific Browser
+### Run in a specific browser
 
 ```bash
-# Chrome
 npx cypress run --browser chrome
-
-# Edge
-npx cypress run --browser edge
-
-# Firefox
 npx cypress run --browser firefox
+npx cypress run --browser edge
 ```
 
 ---
 
-### Test Results
+## Expected Results
 
-**Expected Output (saucedemo.cy.js):**
+**saucedemo.cy.js:**
 
 ```text
 SauceDemo Test Suite
-  ✓ Successful Login (18499ms)
-  ✓ Failed Login (7275ms)
-  ✓ Add item and verify cart count (1329ms)
-  ✓ Complete Checkout Flow (3796ms)
-  ✓ Logout (3721ms)
+  - Successful Login (18499ms)
+  - Failed Login (7275ms)
+  - Add item and verify cart count (1329ms)
+  - Complete Checkout Flow (3796ms)
+  - Logout (3721ms)
 
 5 passing (35s)
 ```
 
-**Expected Output (problem-user.cy.js):**
+**problem-user.cy.js:**
 
 ```text
 Problem User - Bug Documentation Tests
-  ✓ BUG-001: Verify product images are displayed correctly (44164ms)
-  ✓ BUG-002: Test Add to Cart button behavior (6662ms)
-  ✓ BUG-003: Test product sorting functionality (3787ms)
+  - BUG-001: Verify product images are displayed correctly (44164ms)
+  - BUG-002: Test Add to Cart button behavior (6662ms)
+  - BUG-003: Test product sorting functionality (3787ms)
   1) BUG-004: Complete checkout flow with problem_user
-  ✓ Exploratory: Test navigation and UI consistency (1439ms)
+  - Exploratory: Test navigation and UI consistency (1439ms)
 
 4 passing (1m)
 1 failing
 ```
 
-⚠️ **Note:** The failure in BUG-004 is expected - it documents the critical checkout blocker for problem_user.
+The BUG-004 failure is expected — it's documenting the checkout blocker.
 
 ---
 
 ## Postman Collection
 
-### Import Collection
+### Import
 
-1. Open **Postman**
-2. Click **Import** (top-left)
-3. Select **Upload Files**
-4. Choose `postman/users-api-collection.json`
-5. Click **Import**
+1. Open Postman
+2. Click Import
+3. Upload `postman/users-api-collection.json`
 
-### Collection Contents
+### What's in the collection
 
-The collection includes REST API tests for a standard Users endpoint:
+REST API tests against a standard Users endpoint:
 
-- **GET** `/users` - List all users
-- **GET** `/users/:id` - Get user by ID (valid & invalid ID tests)
-- **POST** `/users` - Create new user (with validation tests)
-- **PUT** `/users/:id` - Update user
-- **DELETE** `/users/:id` - Delete user
-- **401 Tests** - Unauthorized access handling
+- GET `/users` — list all users
+- GET `/users/:id` — get by ID, including invalid ID tests
+- POST `/users` — create user with validation checks
+- PUT `/users/:id` — update user
+- DELETE `/users/:id` — delete user
+- Unauthorized access handling (401 tests)
 
-### Running API Tests
+### Running the collection
 
-#### Individual Request
-1. Select a request from the collection
-2. Click **Send**
-3. View test results in the **Test Results** tab
+For a single request: hit Send, check the Test Results tab.
 
-#### Run Entire Collection
-1. Click the **collection name**
-2. Click **Run** (or **Run collection**)
-3. Select all requests
-4. Click **Run [Collection Name]**
-5. View aggregated test results
-
-#### Export Results
-After running the collection:
-1. Click **Export Results**
-2. Save as JSON for documentation
-
-### Environment Setup (Optional)
-
-Create a Postman environment for dynamic data:
-
-```json
-{
-  "baseUrl": "https://api.example.com",
-  "userId": "",
-  "userEmail": "",
-  "authToken": ""
-}
-```
-
-Variables are automatically set by pre-request scripts during test execution.
+For the full collection: open the collection, click Run, select all requests, and run. After it finishes you can export the results as JSON.
 
 ---
 
-## Test Strategy Summary
+## Test Strategy
 
-Testing focused on **critical end-to-end user workflows** including authentication, cart management, product filtering, and checkout completion. The strategy employed **functional testing**, **exploratory testing**, **negative testing**, **Equivalence Partitioning (EP)**, and **Boundary Value Analysis (BVA)** to maximize defect discovery while minimizing redundant scenarios.
+The focus was on critical end-to-end flows — login, cart management, product filtering, and checkout. I used functional testing, exploratory testing, negative testing, equivalence partitioning, and boundary value analysis to find real issues without writing redundant tests.
 
-**High-priority business flows** were selected for automation because they represent the most critical user paths and are likely regression candidates. Manual exploratory testing supplemented automation to identify UI inconsistencies and unexpected application behavior.
+The high-priority flows were automated because they're the most likely regression candidates. Manual exploratory testing filled in the gaps and is actually what caught the worst bug (BUG-006).
 
-**Key Techniques:**
-- **Equivalence Partitioning** - Reduced redundant tests by grouping similar inputs
-- **Boundary Value Analysis** - Tested input limits (checkout fields, long strings)
-- **Negative Testing** - Verified error handling (invalid login, missing fields)
-- **Exploratory Testing** - Discovered unexpected issues (checkout blocker)
-- **Regression Testing** - Automated high-priority flows for continuous validation
-
-**Automation Philosophy:**
-- Page Object Model ensures maintainability
-- Environment variables secure sensitive data
-- Screenshots capture failures for debugging
-- Custom commands reduce code duplication
-- Parallel test execution ready (CI/CD)
+**Automation approach:**
+- Page Object Model keeps selectors and actions separate from test logic
+- Environment variables keep credentials out of the codebase
+- Screenshots are captured automatically on failure
+- Custom commands cut down on repeated login boilerplate
 
 ---
 
 ## Known Issues
 
-### 🚨 CRITICAL BLOCKERS
+### Blockers
 
-**BUG-006: Checkout Last Name Field Malfunction**
-- **Severity:** BLOCKER
-- **Impact:** Affects **ALL USERS** - 100% checkout abandonment
-- **Technical Details:** Last name field input redirects to first name field due to incorrect JavaScript event binding
-- **Evidence:** ✅ Manually verified via UI testing
-- **Business Impact:** Complete loss of e-commerce functionality - no user can complete checkout
-- **Status:** Open - **REQUIRES IMMEDIATE HOTFIX**
-- **Timeline:** P0 - Fix within 24 hours
+**BUG-006: Checkout last name field is broken**
+- Severity: Blocker
+- Affects all users — 100% checkout abandonment
+- Typing in the Last Name field inputs into the First Name field instead — likely a bad event binding
+- Manually verified
+- Needs an immediate hotfix
 
-**BUG-005: problem_user Cannot Complete Checkout**
-- **Severity:** BLOCKER
-- **Impact:** 100% cart abandonment for problem_user account
-- **Technical Details:** Finish button element not found on checkout-step-two page
-- **Evidence:** Screenshot captured in `cypress/screenshots/`
-- **Status:** Open
-- **Timeline:** P0 - Investigate within 48 hours (verify if intentional test account behavior)
+**BUG-005: problem_user can't finish checkout**
+- Severity: Blocker
+- The finish button is missing from the checkout confirmation step
+- Screenshot captured in `cypress/screenshots/`
+- Could be intentional for this test account — needs investigation
 
-### ⚠️ HIGH SEVERITY ISSUES
+### High severity
 
-**BUG-001: Product Images Incorrect (Dog Images)**
-- **Severity:** HIGH
-- **Status:** ✅ MANUALLY VERIFIED
-- **Impact:** All product images show dog pictures - confusing shopping experience
-- **Evidence:** Confirmed via UI testing on problem_user account
-- **Timeline:** P1 - Fix within 1 week
+**BUG-001: Wrong product images**
+- All products show a dog picture on the problem_user account
+- Manually verified
 
-**BUG-007: Remove Button Non-Functional on Inventory Page**
-- **Severity:** HIGH
-- **Status:** ✅ MANUALLY VERIFIED
-- **Impact:** Users cannot remove items from cart on inventory page - degraded UX
-- **Evidence:** Confirmed via UI testing
-- **Timeline:** P1 - Fix within 1 week
+**BUG-007: Remove button doesn't work on inventory page**
+- Users can't remove items from cart while on the inventory page
+- Manually verified
 
-### 📋 MEDIUM ISSUES
+### Medium
 
 **BUG-004: Inventory display inconsistency**
-- **Severity:** Medium
-- **Status:** Requires manual verification
-- **Impact:** Minor UI inconsistencies
+- Minor UI inconsistencies on the inventory page
+- Needs further manual verification
 
-### ✅ RESOLVED (Not Reproduced)
+### Not reproduced
 
-**BUG-002: Cart button behavior** - Tests show cart functionality works correctly
-**BUG-003: Sorting malfunction** - All sorting options (A-Z, Z-A, prices) work correctly
-
----
-
-## Blockers
-
-**No blocking issues** prevented completion of the assessment.
-
-The problem_user checkout failure is documented as BUG-005 but did not block assessment completion since it is an expected defect in that account.
+- BUG-002 (cart button issues) — cart works fine in testing
+- BUG-003 (sorting malfunction) — all four sorting options work correctly
 
 ---
 
 ## Observations
 
-### standard_user Account
-- ⚠️ **CRITICAL DEFECT DISCOVERED** - Not fully functional
-- ✅ Login, cart, filtering, and logout work correctly
-- 🚨 **BLOCKER: Checkout form broken (BUG-006)** - last name field redirects to first name
-- ✅ Average response times acceptable (1-19s per test)
-- ❌ **Previous assessment of "fully functional" was INCORRECT**
-- ⚠️ **NOT recommended for production** until BUG-006 is fixed
+**standard_user:**
+- Login, cart, filtering, and logout all work
+- Checkout is broken (BUG-006) — this account should not be marked as fully functional
+- Response times are acceptable across the suite
 
-### problem_user Account
-- ⚠️ **Multiple critical and high severity issues**
-- ✅ Login works
-- ✅ Cart add functionality works (contrary to documentation)
-- ❌ **BUG-007: Remove button non-functional on inventory page**
-- ✅ Product sorting works correctly (contrary to documentation)
-- ❌ **BUG-001 CONFIRMED: All product images show dog pictures**
-- ✅ Navigation and UI work
-- 🚨 **BLOCKER: Checkout cannot be completed (BUG-005)** - finish button missing
-- 🚨 **BLOCKER: Checkout form broken (BUG-006)** - affects this account too
-- 📊 **Useful for negative test case validation**
+**problem_user:**
+- Login works
+- Cart adding works (contrary to what I expected)
+- Sorting works correctly
+- Product images are all wrong (BUG-001 confirmed)
+- Remove button is broken (BUG-007 confirmed)
+- Checkout is completely blocked (BUG-005)
+- Checkout form is also broken (BUG-006 affects this account too)
+- Still useful for validating negative test scenarios
 
-### Test Coverage Assessment
-- ✅ **Happy path scenarios:** Well covered
-- ✅ **Negative testing:** Covered for login validation
-- ⚠️ **Boundary value testing:** Minimal coverage (deferred low-priority tests)
-- ⚠️ **Edge cases:** Limited coverage (rapid clicking, session management)
-- ✅ **Cross-user testing:** Both accounts tested extensively
-
-### Automation Quality
-- ✅ Page Object Model properly implemented
-- ✅ Custom commands reduce duplication
-- ✅ Environment variables secure credentials
-- ✅ Tests are stable and reliable (no flaky tests observed)
-- ✅ Screenshot capture on failures enabled
-- ✅ Test execution time reasonable (~2 minutes full suite)
+**Coverage:**
+- Happy path: well covered
+- Negative testing: covered for login
+- Boundary values: minimal, low-priority tests were deferred
+- Edge cases: limited — rapid clicking and session management weren't tested
 
 ---
 
-## Future Improvements
+## Possible Next Steps
 
-### Short-Term (Sprint 1-2)
-1. ✨ Add boundary value tests for input fields (postal codes, names)
-2. ✨ Add edge case tests (rapid clicking, session timeout)
-3. ✨ Manual verification of product images with problem_user
-4. ✨ Add data-driven testing for multiple product scenarios
+**Short-term:**
+- Add boundary value tests for input fields (postal codes, long names)
+- Add edge case tests (rapid clicking, session timeout behavior)
+- Data-driven tests for multiple product scenarios
 
-### Medium-Term (Sprint 3-4)
-5. 🔄 Integrate Cypress into CI/CD pipeline (GitHub Actions)
-6. 📊 Add Cypress Dashboard or Mochawesome reporting
-7. 🎨 Implement visual regression testing (Percy, Applitools)
-8. 🔌 Add API-level testing to complement E2E tests
-9. ⚡ Enable parallel test execution for faster feedback
+**Medium-term:**
+- Set up GitHub Actions for CI/CD integration
+- Add Mochawesome or a similar HTML reporter
+- Look into visual regression testing (Percy or Applitools)
 
-### Long-Term (Quarter 2+)
-10. 🧪 Expand test coverage to 95%+ of critical paths
-11. 🔒 Add security testing (XSS, CSRF, SQL injection)
-12. ♿ Add accessibility testing (WCAG 2.1 compliance)
-13. 📱 Add mobile responsive testing
-14. 🌐 Add cross-browser testing matrix (Chrome, Firefox, Safari, Edge)
+**Longer-term:**
+- Push test coverage to 95%+ of critical paths
+- Add security testing (XSS, CSRF, SQL injection basics)
+- Accessibility testing against WCAG 2.1
+- Mobile responsive testing
+- Cross-browser matrix (Chrome, Firefox, Safari, Edge)
 
 ---
 
-## Contributing
+## Adding Tests
 
-### Running Tests Locally
+Create a new spec file in `cypress/e2e/`, import whatever page objects you need, and write tests using the standard `describe`/`it` pattern.
 
-```bash
-# Install dependencies
-npm install
-
-# Run tests in UI mode
-npx cypress open
-
-# Run tests in headless mode
-npx cypress run
-
-# Run specific test file
-npx cypress run --spec "cypress/e2e/saucedemo.cy.js"
-```
-
-### Adding New Tests
-
-1. Create test file in `cypress/e2e/`
-2. Import necessary page objects
-3. Write test cases using `describe` and `it` blocks
-4. Use page object methods for actions
-5. Add assertions with `cy.should()`
-
-### Creating New Page Objects
-
-1. Create new file in `cypress/pages/`
-2. Define selectors as class properties
-3. Create methods for user actions
-4. Export the class
-
-**Example:**
-
-```javascript
-class ProductPage {
-    productTitle = '.product-title';
-
-    verifyProductName(name) {
-        cy.get(this.productTitle).should('contain', name);
-    }
-}
-
-export default ProductPage;
-```
+For new page objects, create a file in `cypress/pages/`, define selectors as class properties, write action methods, and export the class. See the existing page files for reference.
 
 ---
 
 ## Documentation
 
-- **SECTION-1-TEST-CASES.md** - Detailed test cases with actual execution results
-- **SECTION-2-CYPRESS.md** - Cypress implementation guide
-- **SECTION-3-POSTMAN.md** - Postman API test scripts
-- **cypress/screenshots/** - Failure screenshots with visual evidence
+- `SECTION-1-TEST-CASES.md` — detailed test cases with actual results
+- `SECTION-2-CYPRESS.md` — Cypress setup and implementation notes
+- `SECTION-3-POSTMAN.md` — Postman API test scripts
 
 ---
 
-## Test Evidence
-
-All test runs include:
-- ✅ Console output with pass/fail status
-- ✅ Execution time per test
-- ✅ Screenshots on failures
-- ✅ Detailed error messages
-- ✅ Test coverage summary
-
----
-
-## Support
-
-For questions or issues:
-1. Check the documentation files (SECTION-*.md)
-2. Review Cypress screenshots for failure evidence
-3. Run tests with `npx cypress open` for visual debugging
-4. Check Cypress logs in terminal output
-
----
-
-## License
-
-This project is created for educational/assessment purposes.
-
----
-
-## Acknowledgments
-
-- **SauceDemo** - Test application
-- **Cypress.io** - E2E testing framework
-- **Postman** - API testing platform
-
----
-
-**Assessment Completed:** May 2026
-**Test Environment:** https://www.saucedemo.com/
+**Assessment completed:** May 2026
 **Framework:** Cypress 15.15.0 | Node.js v22.17.1
-**Status:** ✅ All sections completed with real execution results
+**Test environment:** https://www.saucedemo.com
