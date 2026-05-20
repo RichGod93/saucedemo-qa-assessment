@@ -1,0 +1,604 @@
+{
+	"info": {
+		"_postman_id": "qa-assessment-petstore-users",
+		"name": "Petstore Users API Collection",
+		"description": "API test collection for Swagger Petstore User endpoints as part of QA Technical Assessment. Tests include status code validation, response time, schema validation, authentication, and error handling for user management operations.\n\nBase API: https://petstore.swagger.io/v2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST Create User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate unique username to avoid conflicts",
+							"const timestamp = Date.now();",
+							"const randomUsername = \"user\" + timestamp;",
+							"",
+							"pm.environment.set(\"username\", randomUsername);",
+							"pm.environment.set(\"firstName\", \"Test\");",
+							"pm.environment.set(\"lastName\", \"User\");",
+							"pm.environment.set(\"email\", randomUsername + \"@test.com\");",
+							"pm.environment.set(\"password\", \"testPass123\");",
+							"",
+							"console.log(\"Creating user: \" + randomUsername);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response contains success code",
+							"pm.test(\"Response indicates successful creation\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData.code).to.be.a(\"number\");",
+							"});",
+							"",
+							"// Test 4: Response contains message",
+							"pm.test(\"Response contains message\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});",
+							"",
+							"// Test 5: Response type is correct",
+							"pm.test(\"Response has correct type\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"type\");",
+							"});",
+							"",
+							"console.log(\"User created: \" + pm.environment.get(\"username\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 0,\n  \"username\": \"{{username}}\",\n  \"firstName\": \"{{firstName}}\",\n  \"lastName\": \"{{lastName}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"phone\": \"1234567890\",\n  \"userStatus\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				},
+				"description": "Create a new user in the Petstore. Tests verify successful creation with 200 status, response structure, and timing."
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create Users with Array",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response structure validation",
+							"pm.test(\"Response has correct structure\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData).to.have.property(\"type\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"id\": 0,\n    \"username\": \"arrayuser1\",\n    \"firstName\": \"Array\",\n    \"lastName\": \"User1\",\n    \"email\": \"arrayuser1@test.com\",\n    \"password\": \"pass123\",\n    \"phone\": \"1234567890\",\n    \"userStatus\": 1\n  },\n  {\n    \"id\": 0,\n    \"username\": \"arrayuser2\",\n    \"firstName\": \"Array\",\n    \"lastName\": \"User2\",\n    \"email\": \"arrayuser2@test.com\",\n    \"password\": \"pass123\",\n    \"phone\": \"0987654321\",\n    \"userStatus\": 1\n  }\n]"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/createWithArray",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"createWithArray"
+					]
+				},
+				"description": "Create multiple users with array input. Tests verify batch creation success and response structure."
+			},
+			"response": []
+		},
+		{
+			"name": "GET User Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response contains session information",
+							"pm.test(\"Response contains login session info\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});",
+							"",
+							"// Test 4: Message contains session token or logged in info",
+							"pm.test(\"Response message indicates successful login\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    const message = jsonData.message.toLowerCase();",
+							"    pm.expect(message).to.satisfy(function(msg) {",
+							"        return msg.includes(\"logged\") || msg.includes(\"session\");",
+							"    });",
+							"});",
+							"",
+							"// Test 5: Content-Type header validation",
+							"pm.test(\"Content-Type is application/json\", function() {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/login?username={{username}}&password={{password}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{username}}"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}"
+						}
+					]
+				},
+				"description": "Login user into the system. Tests verify successful authentication, session creation, and response structure."
+			},
+			"response": []
+		},
+		{
+			"name": "GET User Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response indicates successful logout",
+							"pm.test(\"Logout successful\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});",
+							"",
+							"console.log(\"User logged out successfully\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"logout"
+					]
+				},
+				"description": "Logout current logged in user session. Tests verify successful logout and response structure."
+			},
+			"response": []
+		},
+		{
+			"name": "GET User by Username - Valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response is a user object",
+							"pm.test(\"Response is a user object\", function() {",
+							"    const user = pm.response.json();",
+							"    pm.expect(user).to.be.an(\"object\");",
+							"    pm.expect(user).to.not.be.an(\"array\");",
+							"});",
+							"",
+							"// Test 4: User schema validation",
+							"pm.test(\"User object has correct schema\", function() {",
+							"    const user = pm.response.json();",
+							"",
+							"    pm.expect(user).to.have.property(\"id\");",
+							"    pm.expect(user).to.have.property(\"username\");",
+							"    pm.expect(user).to.have.property(\"firstName\");",
+							"    pm.expect(user).to.have.property(\"lastName\");",
+							"    pm.expect(user).to.have.property(\"email\");",
+							"    pm.expect(user).to.have.property(\"password\");",
+							"    pm.expect(user).to.have.property(\"phone\");",
+							"    pm.expect(user).to.have.property(\"userStatus\");",
+							"});",
+							"",
+							"// Test 5: Username matches requested username",
+							"pm.test(\"Returned username matches requested username\", function() {",
+							"    const user = pm.response.json();",
+							"    const requestedUsername = pm.environment.get(\"username\");",
+							"",
+							"    pm.expect(user.username).to.eql(requestedUsername);",
+							"});",
+							"",
+							"// Test 6: Email format validation",
+							"pm.test(\"Email format is valid\", function() {",
+							"    const user = pm.response.json();",
+							"    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;",
+							"",
+							"    pm.expect(user.email).to.match(emailRegex);",
+							"});",
+							"",
+							"// Test 7: Data types validation",
+							"pm.test(\"Field data types are correct\", function() {",
+							"    const user = pm.response.json();",
+							"",
+							"    pm.expect(user.id).to.be.a(\"number\");",
+							"    pm.expect(user.username).to.be.a(\"string\");",
+							"    pm.expect(user.firstName).to.be.a(\"string\");",
+							"    pm.expect(user.lastName).to.be.a(\"string\");",
+							"    pm.expect(user.email).to.be.a(\"string\");",
+							"    pm.expect(user.userStatus).to.be.a(\"number\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{username}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{username}}"
+					]
+				},
+				"description": "Get user by username. Tests verify successful retrieval, complete schema, data types, and email format validation."
+			},
+			"response": []
+		},
+		{
+			"name": "GET User by Username - Invalid (404)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 404",
+							"pm.test(\"Status code is 404 for invalid username\", function() {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Error response structure",
+							"pm.test(\"Error response has correct structure\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData).to.have.property(\"type\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});",
+							"",
+							"// Test 4: Error message indicates user not found",
+							"pm.test(\"Error message indicates user not found\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    const message = jsonData.message.toLowerCase();",
+							"    ",
+							"    pm.expect(message).to.satisfy(function(msg) {",
+							"        return msg.includes(\"not found\") || msg.includes(\"user not found\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/invalidusername999999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"invalidusername999999"
+					]
+				},
+				"description": "Test error handling by requesting user with invalid username. Verifies 404 status and appropriate error response."
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response indicates successful update",
+							"pm.test(\"Update successful\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});",
+							"",
+							"// Test 4: Response structure validation",
+							"pm.test(\"Response has correct structure\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"type\");",
+							"});",
+							"",
+							"console.log(\"User updated: \" + pm.environment.get(\"username\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 0,\n  \"username\": \"{{username}}\",\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Name\",\n  \"email\": \"updated.{{email}}\",\n  \"password\": \"newPass456\",\n  \"phone\": \"9876543210\",\n  \"userStatus\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/{{username}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{username}}"
+					]
+				},
+				"description": "Update an existing user. Tests verify successful update with 200 status and response structure."
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code is 200",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test 2: Response time under 2000ms",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"// Test 3: Response indicates successful deletion",
+							"pm.test(\"Deletion successful\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"});",
+							"",
+							"// Test 4: Response structure validation",
+							"pm.test(\"Response has correct structure\", function() {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"type\");",
+							"});",
+							"",
+							"console.log(\"User deleted: \" + pm.environment.get(\"username\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{username}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{username}}"
+					]
+				},
+				"description": "Delete a user. Tests verify 200 status, successful deletion message, and response structure."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Collection-level pre-request script",
+					"// Runs before every request in the collection",
+					"",
+					"// Log request info",
+					"console.log(\"Request: \" + pm.request.method + \" \" + pm.request.url);",
+					"console.log(\"Timestamp: \" + new Date().toISOString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Collection-level tests",
+					"// Runs after every request in the collection",
+					"",
+					"pm.test(\"Response has JSON content type\", function() {",
+					"    pm.response.to.have.header(\"Content-Type\");",
+					"});",
+					"",
+					"pm.test(\"Response time is acceptable\", function() {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "string"
+		}
+	]
+}

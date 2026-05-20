@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor directories
+.vscode/
+.idea/
+
+# Coverage reports
+coverage/
