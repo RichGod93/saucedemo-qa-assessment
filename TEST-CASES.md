@@ -1,4 +1,4 @@
-# Section 1 — Test Strategy
+# Test Strategy
 
 **Scope**
 Testing covers the core user workflows on SauceDemo: login, add/remove products from cart, filter products, view cart, and checkout. Both `standard_user` and `problem_user` accounts are covered. Functional behavior, validation logic, UI consistency, navigation, and end-to-end workflow completion are in scope. Backend and API testing are out of scope for this section.

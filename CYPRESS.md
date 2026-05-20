@@ -1,4 +1,4 @@
-# Section 2 — Cypress Automation (Page Object Model)
+# Cypress Automation (Page Object Model)
 
 ## Overview
 

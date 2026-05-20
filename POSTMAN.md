@@ -1,4 +1,4 @@
-# Section 3 — Postman API Tests
+# Postman API Tests
 
 ## Overview
 
