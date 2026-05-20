@@ -2,13 +2,13 @@
 
 ## Overview
 
-This section documents the Cypress E2E test automation implementation using the Page Object Model (POM) design pattern.
+This section covers the Cypress E2E test automation setup using the Page Object Model pattern.
 
-**Framework:** Cypress 15.15.0
-**Pattern:** Page Object Model (POM)
-**Language:** JavaScript ES6+
-**Test Files:** 2 spec files (saucedemo.cy.js, problem-user.cy.js)
-**Page Objects:** 4 pages (Login, Inventory, Cart, Checkout)
+- Framework: Cypress 15.15.0
+- Pattern: Page Object Model (POM)
+- Language: JavaScript ES6+
+- Test Files: 2 spec files (saucedemo.cy.js, problem-user.cy.js)
+- Page Objects: 4 (Login, Inventory, Cart, Checkout)
 
 ---
 
@@ -18,23 +18,23 @@ This section documents the Cypress E2E test automation implementation using the 
 cypress/
 ├── e2e/
 │   ├── saucedemo.cy.js          # Main test suite (standard_user)
-│   └── problem-user.cy.js       # Problem user bug documentation
+│   └── problem-user.cy.js       # problem_user bug documentation
 │
 ├── pages/
-│   ├── LoginPage.js             # Login page object
-│   ├── InventoryPage.js         # Product inventory page object
-│   ├── CartPage.js              # Shopping cart page object
-│   └── CheckoutPage.js          # Checkout flow page object
+│   ├── LoginPage.js
+│   ├── InventoryPage.js
+│   ├── CartPage.js
+│   └── CheckoutPage.js
 │
 ├── screenshots/                  # Auto-captured on failures
 │
 └── support/
     ├── commands.js               # Custom commands
-    └── e2e.js                    # Cypress configuration
+    └── e2e.js
 
-cypress.config.js                 # Cypress configuration
-cypress.env.json                  # Environment variables (credentials)
-package.json                      # Node dependencies
+cypress.config.js
+cypress.env.json                  # Not committed — create this manually
+package.json
 ```
 
 ---
@@ -62,10 +62,7 @@ module.exports = defineConfig({
 });
 ```
 
-**Key Features:**
-- `baseUrl` set to SauceDemo application
-- Custom `getEnv` task for secure credential access
-- Node event listeners configured
+`allowCypressEnv: false` prevents credentials from being exposed in the browser context. The `getEnv` task reads from `config.env` on the Node.js side instead.
 
 ---
 
@@ -79,11 +76,7 @@ module.exports = defineConfig({
 }
 ```
 
-**Security Notes:**
-- Credentials stored separately from code
-- Accessed via `Cypress.env()` or `cy.task('getEnv', 'KEY')`
-- Should be added to `.gitignore` in real projects
-- Never hardcode credentials in test files
+This file is gitignored. If you're cloning the repo, create it manually in the project root with the values above. Never hardcode credentials in the test files themselves.
 
 ---
 
@@ -117,14 +110,7 @@ module.exports = defineConfig({
 
 ### 1. LoginPage.js
 
-**Location:** `cypress/pages/LoginPage.js`
-
-**Responsibilities:**
-- Handle login functionality
-- Verify login success/failure
-- Manage logout process
-
-**Implementation:**
+Handles login, logout, and login validation.
 
 ```javascript
 class LoginPage {
@@ -176,7 +162,7 @@ class LoginPage {
 export default LoginPage;
 ```
 
-**Usage Example:**
+Usage:
 
 ```javascript
 import LoginPage from '../pages/LoginPage';
@@ -194,14 +180,7 @@ it('Login test', () => {
 
 ### 2. InventoryPage.js
 
-**Location:** `cypress/pages/InventoryPage.js`
-
-**Responsibilities:**
-- Add items to cart
-- Verify cart count
-- Navigate to cart
-
-**Implementation:**
+Handles adding items to cart and navigating to the cart.
 
 ```javascript
 class InventoryPage {
@@ -231,13 +210,7 @@ export default InventoryPage;
 
 ### 3. CartPage.js
 
-**Location:** `cypress/pages/CartPage.js`
-
-**Responsibilities:**
-- Verify items in cart
-- Proceed to checkout
-
-**Implementation:**
+Verifies cart contents and moves to checkout.
 
 ```javascript
 class CartPage {
@@ -261,14 +234,7 @@ export default CartPage;
 
 ### 4. CheckoutPage.js
 
-**Location:** `cypress/pages/CheckoutPage.js`
-
-**Responsibilities:**
-- Fill checkout information
-- Complete order
-- Verify order success
-
-**Implementation:**
+Fills the checkout form and confirms order completion.
 
 ```javascript
 class CheckoutPage {
@@ -309,8 +275,6 @@ export default CheckoutPage;
 ### cypress/support/commands.js
 
 ```javascript
-// Custom Cypress Commands
-
 Cypress.Commands.add('loginStandardUser', () => {
 
     cy.visit('/');
@@ -328,39 +292,31 @@ Cypress.Commands.add('loginStandardUser', () => {
 });
 ```
 
-**Usage:**
+This command handles login in a single call so tests don't have to repeat the same steps. It reads credentials from the Node side via `cy.task` rather than from `Cypress.env()` directly, which keeps sensitive values out of the browser context.
+
+Usage:
 
 ```javascript
 it('Test that requires login', () => {
     cy.loginStandardUser();
-    // Continue with test...
+    // continue with test
 });
 ```
-
-**Benefits:**
-- Reusable across multiple tests
-- Reduces code duplication
-- Centralizes authentication logic
-- Makes tests more readable
 
 ---
 
 ## Test Suites
 
-### Test Suite 1: saucedemo.cy.js (standard_user)
+### Suite 1: saucedemo.cy.js (standard_user)
 
-**Location:** `cypress/e2e/saucedemo.cy.js`
+Validates core functionality with the standard_user account.
 
-**Purpose:** Validate core functionality with standard_user account
-
-**Test Cases:**
-1. ✅ Successful Login
-2. ✅ Failed Login
-3. ✅ Add item and verify cart count
-4. ✅ Complete Checkout Flow
-5. ✅ Logout
-
-**Full Implementation:**
+Tests:
+1. Successful Login
+2. Failed Login
+3. Add item and verify cart count
+4. Complete Checkout Flow
+5. Logout
 
 ```javascript
 import LoginPage from '../pages/LoginPage';
@@ -420,49 +376,41 @@ describe('SauceDemo Test Suite', () => {
 });
 ```
 
-**Execution Results:**
+Execution results:
 
 ```text
 SauceDemo Test Suite
-  ✓ Successful Login (18499ms)
-  ✓ Failed Login (7275ms)
-  ✓ Add item and verify cart count (1329ms)
-  ✓ Complete Checkout Flow (3796ms)
-  ✓ Logout (3721ms)
+  - Successful Login (18499ms)
+  - Failed Login (7275ms)
+  - Add item and verify cart count (1329ms)
+  - Complete Checkout Flow (3796ms)
+  - Logout (3721ms)
 
 5 passing (35s)
 ```
 
-**Status:** ✅ All tests passing
-
 ---
 
-### Test Suite 2: problem-user.cy.js (problem_user)
+### Suite 2: problem-user.cy.js (problem_user)
 
-**Location:** `cypress/e2e/problem-user.cy.js`
+Documents known bugs with the problem_user account. Most tests pass — they confirm what works and what doesn't. The BUG-004 test is expected to fail — that's the point.
 
-**Purpose:** Document known bugs with problem_user account
+Tests:
+1. BUG-001: Verify product images
+2. BUG-002: Test Add to Cart button
+3. BUG-003: Test product sorting
+4. BUG-004: Complete checkout flow (fails — documents the blocker)
+5. Exploratory: Navigation and UI consistency
 
-**Test Cases:**
-1. ✅ BUG-001: Verify product images
-2. ✅ BUG-002: Test Add to Cart button
-3. ✅ BUG-003: Test product sorting
-4. ❌ BUG-004: Complete checkout flow (FAILS - documents blocker)
-5. ✅ Exploratory: Navigation and UI consistency
-
-**Key Finding:**
-- **BUG-004 fails intentionally** to document the critical checkout blocker
-- Screenshot captured: `cypress/screenshots/problem-user.cy.js/...`
-
-**Execution Results:**
+Execution results:
 
 ```text
 Problem User - Bug Documentation Tests
-  ✓ BUG-001: Verify product images are displayed correctly (44164ms)
-  ✓ BUG-002: Test Add to Cart button behavior (6662ms)
-  ✓ BUG-003: Test product sorting functionality (3787ms)
+  - BUG-001: Verify product images are displayed correctly (44164ms)
+  - BUG-002: Test Add to Cart button behavior (6662ms)
+  - BUG-003: Test product sorting functionality (3787ms)
   1) BUG-004: Complete checkout flow with problem_user
-  ✓ Exploratory: Test navigation and UI consistency (1439ms)
+  - Exploratory: Test navigation and UI consistency (1439ms)
 
 4 passing (1m)
 1 failing
@@ -472,199 +420,98 @@ Problem User - Bug Documentation Tests
    Expected to find element: [data-test="finish"], but never found it.
 ```
 
-**Status:** ⚠️ 1 expected failure documenting checkout blocker
-
 ---
 
-## Setup and Execution
+## Running the Tests
 
-### Initial Setup
-
-```bash
-# Create project directory
-mkdir saucedemo-qa-assessment
-cd saucedemo-qa-assessment
-
-# Initialize npm
-npm init -y
-
-# Install Cypress
-npm install cypress --save-dev
-
-# Open Cypress (creates folder structure)
-npx cypress open
-```
-
----
-
-### Running Tests
-
-#### 1. Interactive Mode (Cypress UI)
+### Interactive mode
 
 ```bash
 npx cypress open
 ```
 
-- Select **E2E Testing**
-- Choose browser (Chrome, Electron, Firefox, Edge)
-- Click on test file to run
+Select E2E Testing, pick a browser, click on a spec file. Best for debugging or watching individual tests run.
 
-**Use Case:** Test development, debugging, visual inspection
-
----
-
-#### 2. Headless Mode (CLI)
+### Headless mode
 
 ```bash
-# Run all tests
+# Run everything
 npx cypress run
 
-# Run specific test file
+# Run a specific file
 npx cypress run --spec "cypress/e2e/saucedemo.cy.js"
 
-# Run in specific browser
+# Run in a specific browser
 npx cypress run --browser chrome
 
-# Run with video recording
+# With video recording
 npx cypress run --config video=true
 ```
 
-**Use Case:** CI/CD integration, automated testing
-
----
-
-#### 3. Using npm Scripts
+### Using npm scripts
 
 ```bash
-# Run all tests
-npm test
-
-# Run with UI
-npm run test:ui
-
-# Run in Chrome
-npm run test:chrome
-
-# Run standard_user tests only
-npm run test:standard
-
-# Run problem_user tests only
-npm run test:problem
+npm test                   # Run all tests headless
+npm run test:ui            # Open Cypress UI
+npm run test:chrome        # Run in Chrome
+npm run test:standard      # standard_user tests only
+npm run test:problem       # problem_user tests only
 ```
 
 ---
 
-## Best Practices Implemented
+## Design Decisions
 
-### 1. Page Object Model (POM)
-✅ Separates test logic from page structure
-✅ Improves maintainability
-✅ Reduces code duplication
-✅ Makes tests more readable
+**Page Object Model** — selectors and actions live in the page class, not in the test. If a selector changes, you update it in one place. Tests stay readable and focused on what they're testing, not on how to find elements.
 
-### 2. Environment Variables
-✅ Credentials stored securely
-✅ Easy to update without changing code
-✅ Supports multiple environments
+**data-test attributes** — more stable than class or ID selectors. SauceDemo exposes these attributes and using them means UI restyling won't break the tests.
 
-### 3. Custom Commands
-✅ Reusable login functionality
-✅ Consistent across tests
-✅ Reduces test complexity
+**Custom commands** — the login sequence gets used in multiple tests. Centralizing it in `loginStandardUser` means it's consistent and if it ever needs to change, it changes in one place.
 
-### 4. Data-Driven Selectors
-✅ Uses `data-test` attributes
-✅ More stable than class/ID selectors
-✅ Aligned with SauceDemo best practices
-
-### 5. Descriptive Test Names
-✅ Clear intent (e.g., "Complete Checkout Flow")
-✅ Easy to understand failures
-✅ Good documentation
-
-### 6. Proper Assertions
-✅ Verifies expected behavior
-✅ Uses should() for automatic retries
-✅ Meaningful error messages
+**cy.task for credentials** — reading credentials through a Node task keeps them out of the browser context. `allowCypressEnv: false` enforces this at the config level.
 
 ---
 
-## Debugging Tips
+## Debugging
 
-### 1. Use `.debug()` command
+If a test is failing and you need to investigate:
 
 ```javascript
+// Pause execution at a specific point
+cy.get('.selector').click();
+cy.pause();
+
+// Log element details
 cy.get('.selector').debug();
 ```
 
-### 2. Add `.pause()` for manual inspection
+Run with the Cypress UI for the best debugging experience — you can step through commands, inspect the DOM at each point, and see exactly what state the app was in when something failed.
 
-```javascript
-cy.get('.selector').click();
-cy.pause(); // Pauses test execution
-```
-
-### 3. Check screenshots on failures
-
-```bash
-cypress/screenshots/
-```
-
-### 4. Enable video recording
-
-```javascript
-// cypress.config.js
-video: true
-```
-
-### 5. Use Cypress UI for step-by-step debugging
-
-```bash
-npx cypress open
-```
+Screenshots are captured automatically on failure in `cypress/screenshots/`.
 
 ---
 
-## Common Issues and Solutions
+## Common Issues
 
-### Issue 1: Test times out
+**Test times out (`Timed out retrying after 4000ms`)**
+- Increase the timeout: `cy.get('.selector', { timeout: 10000 })`
+- Verify the selector is correct in the current DOM state
+- Check if the element is hidden or behind another element
 
-**Symptom:** `Timed out retrying after 4000ms`
+**Element not found**
+- Confirm the element exists in the DOM at the point the test is looking for it
+- Check if the page finished loading before the selector ran
+- Verify the selector in the browser DevTools first
 
-**Solution:**
-- Increase timeout: `cy.get('.selector', { timeout: 10000 })`
-- Add explicit waits: `cy.wait(500)`
-- Verify selector is correct
-
----
-
-### Issue 2: Element not found
-
-**Symptom:** `Expected to find element but never found it`
-
-**Solution:**
-- Verify element exists in DOM
-- Check if element is visible
-- Use correct selector
-- Wait for page to load
+**Flaky tests (passes sometimes, fails other times)**
+- Look for race conditions — something might not be loaded when the next command runs
+- Cypress automatically retries assertions, but not all commands. Use `cy.should()` where possible to trigger retries.
 
 ---
 
-### Issue 3: Flaky tests
+## CI/CD (Future)
 
-**Symptom:** Tests pass sometimes, fail others
-
-**Solution:**
-- Add proper waits
-- Use Cypress auto-retry mechanism
-- Verify network requests complete
-- Check for race conditions
-
----
-
-## CI/CD Integration (Future Enhancement)
-
-### GitHub Actions Example
+GitHub Actions example:
 
 ```yaml
 name: Cypress E2E Tests
@@ -687,30 +534,11 @@ jobs:
 
 ---
 
-## Performance Metrics
+## Execution Times
 
-**Full Test Suite Execution:**
-- **Total Duration:** ~2 minutes
-- **Tests:** 10 (5 standard_user + 5 problem_user)
-- **Pass Rate:** 90% (9/10 pass, 1 expected failure)
-
-**Individual Test Times:**
+- Full suite: approximately 2 minutes
 - Successful Login: 18.5s
 - Failed Login: 7.3s
 - Cart operations: 1.3s
 - Complete Checkout: 3.8s
 - Logout: 3.7s
-
----
-
-## Conclusion
-
-This Cypress implementation provides:
-✅ Robust E2E test coverage
-✅ Maintainable Page Object Model architecture
-✅ Secure credential management
-✅ Evidence-based bug documentation
-✅ Ready for CI/CD integration
-✅ Comprehensive test reporting
-
-**Status:** Production-ready automation framework

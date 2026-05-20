@@ -99,7 +99,7 @@ saucedemo-qa-assessment/
 │   │   ├── CartPage.js
 │   │   └── CheckoutPage.js
 │   │
-│   ├── screenshots/                  # Auto-captured on test failure
+│   ├── screenshots/                  # Captured screenshots
 │   │
 │   └── support/
 │       ├── commands.js               # Custom commands
