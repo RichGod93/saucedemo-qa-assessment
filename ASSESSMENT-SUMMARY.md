@@ -1,6 +1,6 @@
 # QA Engineer Technical Assessment — Summary
 
-**Candidate:** Rich Godusen
+**Candidate:** RichGod Usen
 **Application Under Test:** https://www.saucedemo.com/
 **Assessment Date:** May 2026
 **Framework:** Cypress 15.15.0 | Node.js v22.17.1

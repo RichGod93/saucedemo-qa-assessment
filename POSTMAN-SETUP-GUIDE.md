@@ -1,56 +1,49 @@
-# Postman API Testing Setup Guide
+# Postman API Testing — Setup Guide
 
 ## Overview
 
-This guide explains the **Swagger Petstore Users API Collection** that has been created for your QA Technical Assessment.
+This guide covers the Swagger Petstore Users API Collection included with this assessment. It walks through importing, running, and understanding the tests — structured for anyone reviewing this work.
 
-**Assessment Requirement:** Write tests in Postman for the Users API endpoints at https://petstore.swagger.io/#/user
+**API being tested:** Swagger Petstore User endpoints at https://petstore.swagger.io/#/user
 
-✅ **GOOD NEWS:** The Postman collection has already been created for you!
-
-**File Location:** `postman/users-api-collection.json`
+**Collection file:** `postman/users-api-collection.json`
 
 ---
 
-## 📦 What's Included
+## What's Included
 
-The collection includes **8 comprehensive API tests** for the Swagger Petstore User endpoints:
+The collection covers 8 API requests for the Swagger Petstore User endpoints:
 
-| # | Endpoint | Method | Purpose | Test Assertions |
-|---|----------|--------|---------|-----------------|
-| 1 | `/user` | POST | Create user | 5 tests |
-| 2 | `/user/createWithArray` | POST | Create multiple users | 3 tests |
-| 3 | `/user/login` | GET | Login user | 5 tests |
-| 4 | `/user/logout` | GET | Logout user | 3 tests |
-| 5 | `/user/{username}` | GET | Get user (valid) | 7 tests |
-| 6 | `/user/{username}` | GET | Get user (404) | 4 tests |
-| 7 | `/user/{username}` | PUT | Update user | 4 tests |
-| 8 | `/user/{username}` | DELETE | Delete user | 4 tests |
+| # | Endpoint | Method | Purpose | Assertions |
+|---|----------|--------|---------|------------|
+| 1 | `/user` | POST | Create a user | 5 |
+| 2 | `/user/createWithArray` | POST | Create multiple users | 3 |
+| 3 | `/user/login` | GET | Login | 5 |
+| 4 | `/user/logout` | GET | Logout | 3 |
+| 5 | `/user/{username}` | GET | Get user — valid ID | 7 |
+| 6 | `/user/{username}` | GET | Get user — invalid ID (404) | 4 |
+| 7 | `/user/{username}` | PUT | Update user | 4 |
+| 8 | `/user/{username}` | DELETE | Delete user | 4 |
 
-**Total Test Assertions:** ~35 tests across all endpoints
+**Total:** approximately 35 test assertions across all requests.
 
 ---
 
-## 🚀 How to Import and Run
+## Step 1: Install Postman
 
-### Step 1: Install Postman
+If you don't have Postman installed:
 
 **macOS:**
 ```bash
-# Using Homebrew
 brew install --cask postman
-
-# Or download from website
 ```
+Or download directly from https://www.postman.com/downloads/
 
 **Windows:**
-- Download installer from https://www.postman.com/downloads/
-- Run installer
-- Launch Postman
+Download the installer from https://www.postman.com/downloads/ and run it.
 
 **Linux:**
 ```bash
-# Download and install
 wget https://dl.pstmn.io/download/latest/linux64 -O postman.tar.gz
 sudo tar -xzf postman.tar.gz -C /opt
 sudo ln -s /opt/Postman/Postman /usr/bin/postman
@@ -58,68 +51,51 @@ sudo ln -s /opt/Postman/Postman /usr/bin/postman
 
 ---
 
-### Step 2: Import the Collection
+## Step 2: Import the Collection
 
-1. **Open Postman application**
-2. **Sign in** (or create free account)
-3. Click **"Import"** button (top-left)
-4. Click **"Upload Files"** or drag and drop
-5. Navigate to:
-   ```
-   /Users/richgodusen/Documents/work/Enyata QA Assessment/saucedemo-qa-assessment/postman/users-api-collection.json
-   ```
-6. Select the file
-7. Click **"Import"**
-8. ✅ Collection imported successfully!
+1. Open Postman
+2. Sign in or create a free account
+3. Click the **Import** button (top-left corner)
+4. Click **Upload Files** or drag and drop
+5. Locate and select `postman/users-api-collection.json` from this repository
+6. Click **Import**
 
-You should now see **"Petstore Users API Collection"** in your Collections sidebar.
+You should see **"Petstore Users API Collection"** appear in your Collections sidebar.
 
 ---
 
-### Step 3: Run the Collection
+## Step 3: Run the Tests
 
-#### Option A: Run Individual Requests
+### Run a single request
 
-1. Expand the collection in left sidebar
-2. Click on any request (e.g., "POST Create User")
+1. Expand the collection in the sidebar
+2. Click any request — for example, "POST Create User"
 3. Review the request details:
-   - **URL:** Uses `{{baseUrl}}` variable (pre-configured)
-   - **Body:** For POST/PUT requests
-   - **Tests:** Click "Tests" tab to see assertions
-4. Click **"Send"** button
-5. View results:
-   - **Response body** (bottom panel)
-   - **Test Results** tab (should show green checkmarks ✅)
-   - **Status code** (e.g., 200, 404)
-   - **Response time**
+   - URL uses the `{{baseUrl}}` variable, which is pre-configured
+   - POST and PUT requests include a request body
+   - The Tests tab shows what assertions will run
+4. Click **Send**
+5. In the response panel, open the **Test Results** tab to see what passed or failed
 
-**Recommended Order:**
-1. POST Create User (creates user)
-2. GET User by Username - Valid (retrieves created user)
-3. PUT Update User (updates user)
-4. DELETE User (deletes user)
+**Recommended run order if running manually:**
+1. POST Create User
+2. GET User by Username — Valid
+3. PUT Update User
+4. DELETE User
 
 ---
 
-#### Option B: Run Entire Collection (Recommended)
+### Run the full collection
 
-1. Click on collection name: **"Petstore Users API Collection"**
-2. Click **"Run"** button (or three dots → "Run collection")
-3. **Collection Runner** window opens
-4. Verify all requests are selected (checkboxes)
-5. Configure settings:
-   - **Iterations:** 1 (default)
-   - **Delay:** 0ms
-   - **Data file:** None
-6. Click **"Run Petstore Users API Collection"**
-7. Watch tests execute sequentially with visual progress
-8. View summary:
-   - Total requests executed
-   - Total tests passed/failed
-   - Average response time
-   - Timeline visualization
+1. Click the collection name: **"Petstore Users API Collection"**
+2. Click **Run** (or open the three-dot menu and select "Run collection")
+3. The Collection Runner opens
+4. Leave settings at default — 1 iteration, no delay, no data file
+5. Click **Run Petstore Users API Collection**
+6. Watch requests execute sequentially
+7. Review the summary when it finishes
 
-**Expected Results:**
+Expected output:
 ```
 Total Requests: 8
 Tests Passed: ~35
@@ -130,142 +106,109 @@ Average Response Time: < 500ms
 
 ---
 
-## 📊 Test Coverage Breakdown
+## Test Coverage Breakdown
 
-### 1. POST Create User (`/user`)
+### 1. POST /user — Create User
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Response indicates successful creation
-- ✅ Response contains message
-- ✅ Response has correct type
+- Status code is 200
+- Response time under 2000ms
+- Response indicates successful creation
+- Response contains a message
+- Response has correct type
 
-**Features:**
-- Pre-request script generates unique username
-- Dynamic email based on timestamp
-- Environment variables set for subsequent requests
+A pre-request script generates a unique username using a timestamp so there are no conflicts between runs. Environment variables are set from the response for use in subsequent requests.
 
 ---
 
-### 2. POST Create Users with Array (`/user/createWithArray`)
+### 2. POST /user/createWithArray — Create Multiple Users
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Response has correct structure
+- Status code is 200
+- Response time under 2000ms
+- Response has correct structure
 
-**Features:**
-- Creates multiple users in one request
-- Tests batch user creation
+Tests batch user creation in a single request.
 
 ---
 
-### 3. GET User Login (`/user/login`)
+### 3. GET /user/login — Login
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Response contains login session info
-- ✅ Response message indicates successful login
-- ✅ Content-Type is application/json
+- Status code is 200
+- Response time under 2000ms
+- Response contains session info
+- Response message indicates successful login
+- Content-Type is application/json
 
-**Features:**
-- Tests authentication flow
-- Session validation
-- Uses credentials from environment variables
+Validates the authentication flow. Credentials come from environment variables set during user creation.
 
 ---
 
-### 4. GET User Logout (`/user/logout`)
+### 4. GET /user/logout — Logout
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Logout successful
+- Status code is 200
+- Response time under 2000ms
+- Logout response is successful
 
-**Features:**
-- Tests session termination
-- Validates logout response
+Confirms the session terminates correctly.
 
 ---
 
-### 5. GET User by Username - Valid (`/user/{username}`)
+### 5. GET /user/{username} — Valid Username
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Response is a user object
-- ✅ User object has correct schema (id, username, firstName, lastName, email, password, phone, userStatus)
-- ✅ Returned username matches requested username
-- ✅ Email format is valid (regex validation)
-- ✅ Field data types are correct
+This is the most thorough request in the collection with 7 assertions:
 
-**Features:**
-- Most comprehensive test (7 assertions)
-- Complete schema validation
-- Data type checking
-- Email format validation with regex
+- Status code is 200
+- Response time under 2000ms
+- Response is a user object
+- User object has the correct schema (id, username, firstName, lastName, email, password, phone, userStatus)
+- Returned username matches the requested username
+- Email format passes regex validation
+- Field data types are correct
 
 ---
 
-### 6. GET User by Username - Invalid (`/user/invalidusername999999`)
+### 6. GET /user/{username} — Invalid Username (404)
 
-**Tests Included:**
-- ✅ Status code is 404 for invalid username
-- ✅ Response time < 2000ms
-- ✅ Error response has correct structure
-- ✅ Error message indicates user not found
+- Status code is 404
+- Response time under 2000ms
+- Error response has the correct structure
+- Error message indicates user not found
 
-**Features:**
-- Negative test case
-- Error handling validation
-- 404 status verification
+This is a negative test — it's supposed to return 404. The test passes when the API handles the error correctly.
 
 ---
 
-### 7. PUT Update User (`/user/{username}`)
+### 7. PUT /user/{username} — Update User
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Update successful
-- ✅ Response has correct structure
+- Status code is 200
+- Response time under 2000ms
+- Update is successful
+- Response has correct structure
 
-**Features:**
-- Tests user data modification
-- Updates firstName, lastName, email, password, phone
+Updates firstName, lastName, email, password, and phone.
 
 ---
 
-### 8. DELETE User (`/user/{username}`)
+### 8. DELETE /user/{username} — Delete User
 
-**Tests Included:**
-- ✅ Status code is 200
-- ✅ Response time < 2000ms
-- ✅ Deletion successful
-- ✅ Response has correct structure
-
-**Features:**
-- Tests user deletion
-- Validates deletion response
+- Status code is 200
+- Response time under 2000ms
+- Deletion is successful
+- Response has correct structure
 
 ---
 
-## 🔧 Collection Features
+## How the Collection is Built
 
-### Pre-Request Scripts
+### Pre-request Scripts
 
-**Collection-Level:**
+**Collection-level (runs before every request):**
 ```javascript
-// Runs before EVERY request
 console.log("Request: " + pm.request.method + " " + pm.request.url);
 console.log("Timestamp: " + new Date().toISOString());
 ```
 
-**Request-Level (POST Create User):**
+**Request-level (POST Create User):**
 ```javascript
-// Generate unique username
 const timestamp = Date.now();
 const randomUsername = "user" + timestamp;
 
@@ -276,156 +219,45 @@ pm.environment.set("email", randomUsername + "@test.com");
 pm.environment.set("password", "testPass123");
 ```
 
+This generates a unique user on every run, avoiding conflicts with leftover data.
+
 ---
 
-### Test Scripts
+### Collection-Level Tests (Run After Every Request)
 
-**Collection-Level Tests (Run after ALL requests):**
 ```javascript
-// Response has JSON content type
 pm.test("Response has JSON content type", function() {
     pm.response.to.have.header("Content-Type");
 });
 
-// Response time is acceptable
 pm.test("Response time is acceptable", function() {
     pm.expect(pm.response.responseTime).to.be.below(5000);
 });
 ```
 
-**Request-Level Tests:**
-- Status code validation
-- Response time thresholds (< 2000ms)
-- Schema validation
-- Data type validation
-- Email format validation (regex)
-- Error message validation
-
 ---
 
 ### Variables
 
-**Collection Variable:**
+**Collection variable:**
 - `baseUrl` = `https://petstore.swagger.io/v2`
 
-**Environment Variables (Dynamic):**
-- `username` - Generated dynamically
-- `firstName` - Set in pre-request
-- `lastName` - Set in pre-request
-- `email` - Generated dynamically
-- `password` - Set in pre-request
+**Environment variables (set dynamically):**
+- `username` — generated per run
+- `firstName` — set in pre-request
+- `lastName` — set in pre-request
+- `email` — generated per run
+- `password` — set in pre-request
 
 ---
 
-## 📸 Taking Screenshots for Evidence
+## API Reference
 
-### What to Capture
-
-1. **Collection Structure:**
-   - Screenshot showing all 8 requests in sidebar
-   - File name: `postman-collection-structure.png`
-
-2. **Individual Request Example:**
-   - Screenshot of POST Create User with:
-     - Request body
-     - Test Results tab showing green checkmarks
-   - File name: `postman-request-example.png`
-
-3. **Collection Runner Results:**
-   - Screenshot showing:
-     - Total requests: 8
-     - All tests passed
-     - Response times
-     - Summary statistics
-   - File name: `postman-runner-results.png`
-
-4. **Test Results Detail:**
-   - Screenshot of Test Results tab showing:
-     - Green checkmarks for all assertions
-     - "PASS" status
-   - File name: `postman-test-results.png`
-
----
-
-## ✅ Verification Checklist
-
-Before submission, verify:
-
-- [ ] Collection imports successfully into Postman
-- [ ] All 8 requests are visible in collection
-- [ ] POST Create User executes successfully
-- [ ] GET User by Username returns created user
-- [ ] GET User by Username (404) returns 404 error
-- [ ] All tests show green checkmarks ✅
-- [ ] Collection Runner shows 100% pass rate
-- [ ] Response times are under 2000ms
-- [ ] Screenshots captured (optional)
-- [ ] Collection file exists in `postman/` folder
-- [ ] Collection file is in Git repository
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: "Could not send request"
-
-**Possible Causes:**
-- No internet connection
-- API endpoint down
-- Firewall blocking request
-
-**Solution:**
-1. Check internet connection
-2. Test API in browser: https://petstore.swagger.io/v2/user/testuser
-3. Try disabling VPN if enabled
-4. Check firewall settings
-
----
-
-### Issue: "baseUrl is not defined"
-
-**Solution:**
-The collection includes the baseUrl variable by default. If you see this error:
-1. Click collection name
-2. Go to "Variables" tab
-3. Verify `baseUrl` = `https://petstore.swagger.io/v2`
-4. Save collection
-
----
-
-### Issue: "Test failed: Username doesn't match"
-
-**Cause:** GET User by Username is running before POST Create User
-
-**Solution:**
-Run requests in order:
-1. POST Create User (first - creates user)
-2. Then run GET User by Username
-
-Or use Collection Runner which runs them sequentially.
-
----
-
-### Issue: "404 User not found"
-
-**This is expected behavior!**
-
-The request "GET User by Username - Invalid (404)" is SUPPOSED to fail with 404. This is a negative test case validating error handling.
-
-Check that the test assertions show:
-- ✅ Status code is 404 for invalid username (PASS)
-- ✅ Error message indicates user not found (PASS)
-
----
-
-## 📚 API Documentation
-
-**Swagger Petstore API Docs:**
-- Interactive Docs: https://petstore.swagger.io/
+- Swagger UI: https://petstore.swagger.io/
 - User Endpoints: https://petstore.swagger.io/#/user
 - OpenAPI Spec: https://petstore.swagger.io/v2/swagger.json
 
-**User Schema:**
+**User schema:**
 ```json
 {
   "id": 0,
@@ -441,102 +273,47 @@ Check that the test assertions show:
 
 ---
 
-## 📝 Adding to README
+## Troubleshooting
 
-Add this section to your main `README.md`:
-
-```markdown
-## Postman API Collection
-
-### Overview
-Comprehensive API test collection for Swagger Petstore User endpoints with **8 requests** and **~35 test assertions**.
-
-### Import Collection
-
-1. Open **Postman**
-2. Click **Import** (top-left)
-3. Select **Upload Files**
-4. Choose `postman/users-api-collection.json`
-5. Click **Import**
-
-### Run Tests
-
-#### Individual Request
-1. Select a request from the collection
-2. Click **Send**
-3. View test results in **Test Results** tab
-
-#### Run Entire Collection
-1. Click collection name
-2. Click **Run**
-3. Click **Run Petstore Users API Collection**
-4. View results summary
-
-### Test Coverage
-
-**Endpoints Tested:**
-- ✅ POST /user - Create user
-- ✅ POST /user/createWithArray - Create multiple users
-- ✅ GET /user/login - Login user
-- ✅ GET /user/logout - Logout user
-- ✅ GET /user/{username} - Get user (valid)
-- ✅ GET /user/{username} - Get user (404 error handling)
-- ✅ PUT /user/{username} - Update user
-- ✅ DELETE /user/{username} - Delete user
-
-**Test Assertions:**
-- Status code validation
-- Response time < 2000ms
-- Schema validation
-- Data type validation
-- Email format validation
-- Error handling (404)
-- Authentication flow (login/logout)
-
-**Expected Results:**
-- Total Requests: 8
-- Tests Passed: ~35
-- Pass Rate: 100%
-- Average Response Time: < 500ms
-
-### API Base URL
-```
-https://petstore.swagger.io/v2
-```
-
-### Features
-- Pre-request scripts for dynamic data generation
-- Comprehensive test assertions
-- Collection-level tests
-- Environment variables
-- Error handling tests
-- Authentication testing
-```
+**"Could not send request"**
+- Check your internet connection
+- Test the API directly in a browser: https://petstore.swagger.io/v2/user/testuser
+- Disable VPN if one is active
+- Check firewall settings
 
 ---
 
-## 🎯 Summary
+**"baseUrl is not defined"**
 
-✅ **Postman collection already created for you**
-✅ **8 API endpoints tested**
-✅ **~35 test assertions**
-✅ **All CRUD operations covered**
-✅ **Authentication tested (login/logout)**
-✅ **Error handling validated (404)**
-✅ **Schema validation included**
-✅ **Performance testing (response times)**
-✅ **Ready to import and run**
-
-**File Location:** `postman/users-api-collection.json` (18KB)
-
-**Next Steps:**
-1. Import collection into Postman
-2. Run Collection Runner
-3. Verify all tests pass (100%)
-4. (Optional) Take screenshots
-5. Commit to Git
-6. Submit!
+The collection includes the `baseUrl` variable by default. If it's missing:
+1. Click the collection name
+2. Open the Variables tab
+3. Confirm `baseUrl` is set to `https://petstore.swagger.io/v2`
+4. Save the collection
 
 ---
 
-**You're all set! 🎉**
+**"Test failed: Username doesn't match"**
+
+This happens when GET User by Username runs before POST Create User — the user doesn't exist yet. Run POST Create User first, or use the Collection Runner which handles request order automatically.
+
+---
+
+**"404 User not found" on the GET Invalid request**
+
+This is expected. Request 6 ("GET User by Username — Invalid") is a negative test case. A 404 response here means the API is handling errors correctly. The test assertions for that request specifically validate the 404 status and error message, so they should show as passing.
+
+---
+
+## Verification Checklist
+
+Before wrapping up:
+
+- [ ] Collection imports successfully
+- [ ] All 8 requests are visible in the sidebar
+- [ ] POST Create User runs without errors
+- [ ] GET User by Username returns the created user
+- [ ] GET User by Username — Invalid returns 404 with passing assertions
+- [ ] Collection Runner shows 100% pass rate
+- [ ] Response times are under 2000ms
+- [ ] Collection file exists in the `postman/` folder and is committed to Git
